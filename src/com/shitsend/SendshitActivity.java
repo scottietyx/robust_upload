@@ -45,7 +45,7 @@ public class SendshitActivity extends Activity {
 
 		if (android.os.Build.VERSION.SDK_INT > 9) {
 			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-					.permitAll().build();
+			.permitAll().build();
 			StrictMode.setThreadPolicy(policy);
 		}
 
@@ -54,11 +54,11 @@ public class SendshitActivity extends Activity {
 	}
 
 	int timestamp = 0;
-	
+
 	private class getLineTask extends AsyncTask<Void, Void, Void> {
 
 		//int timestamp = 0;
-		
+
 		@Override
 		protected Void doInBackground(Void... params) {
 			HttpClient httpclient = new DefaultHttpClient();
