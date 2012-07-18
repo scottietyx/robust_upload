@@ -70,7 +70,7 @@ public class SendshitActivity extends Activity {
 				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
 						2);
 				nameValuePairs.add(new BasicNameValuePair("sensor", "1"));
-				nameValuePairs.add(new BasicNameValuePair("id", "0"));
+				nameValuePairs.add(new BasicNameValuePair("id", "30B57BFBB820273207483858911A00377BD558A3"));
 				httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
 				// Execute HTTP Post Request
@@ -143,19 +143,9 @@ public class SendshitActivity extends Activity {
 		DataOutputStream dos = null;
 		DataInputStream inStream = null;
 
-		String urlString = "http://dolan.bounceme.net/robust_upload.php";
-		// if
-		// i'm
-		// at
-		// work
-		// and
-		// dolan's
-		// at
-		// home
-		// String urlString = "http://192.168.206.31/robust_upload.php";
-		// //dolan's at work
-		// String urlString = "http://192.168.1.45/robust_upload.php"; //both at
-		// home
+		String urlString = "http://dolan.bounceme.net/robust_upload.php"; // if i'm at work and dolan is home
+		// String urlString = "http://192.168.206.31/robust_upload.php"; // both at work
+		// String urlString = "http://192.168.1.45/robust_upload.php"; //both at home
 
 		String lineEnd = "\r\n";
 		String twoHyphens = "--";
