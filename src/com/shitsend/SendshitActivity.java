@@ -169,6 +169,7 @@ public class SendshitActivity extends Activity {
 
 			if (!hasActiveInternetConnection()) {
 				// write code to pause here
+				break;
 
 			}
 
@@ -243,6 +244,22 @@ public class SendshitActivity extends Activity {
 
 			catch (IOException ioex) {
 				Log.d("MediaPlayer", "error: " + ioex.getMessage(), ioex);
+			}
+		}
+		
+		if(file_scanner.hasNext()) {
+			Log.d("GB", "upload not finished");
+			
+			int pausetime=1000;
+			while (!hasActiveInternetConnection()){
+				try {
+					Thread.sleep(pausetime); //pauses loop (millisecs)
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				Log.d("GB", "trying to connect. pausing for: " + pausetime + " seconds");
+				pausetime*=2;
 			}
 		}
 
