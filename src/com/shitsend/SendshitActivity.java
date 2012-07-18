@@ -261,6 +261,8 @@ public class SendshitActivity extends Activity {
 				Log.d("GB", "trying to connect. pausing for: " + pausetime + " seconds");
 				pausetime*=2;
 			}
+			
+			new getLineTask().execute();
 		}
 
 		Log.d("MediaPlayer", "Done uploading everything");
