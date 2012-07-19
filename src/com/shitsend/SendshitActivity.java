@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -313,6 +314,32 @@ public class SendshitActivity extends Activity {
 		id_data.put("guid", ourGuid);
 	}
 	
-	
+	private String getGuid(String username) {
+		Log.d(LOG_TAG, "Grabbing GUID");
+		String guid = null;
+
+		try {
+			guid =  gcrsClient.lookupUserGuid(username);
+		} catch (RuntimeException e) {
+			try {
+				guid =  gcrsClient.registerNewUser(username);
+			} catch (NoSuchAlgorithmException e1) {
+				GCRS.getLogger().severe(e1.toString());
+			} catch (IOException e1) {
+				GCRS.getLogger().severe(e1.toString());
+			}
+		} catch (IOException e) {
+			GCRS.getLogger().severe(e.toString());
+		}
+		if (guid.contains("+BADUSER+"))
+			try {
+				guid =  gcrsClient.registerNewUser(username);
+			} catch (NoSuchAlgorithmException e1) {
+				GCRS.getLogger().severe(e1.toString());
+			} catch (IOException e1) {
+				GCRS.getLogger().severe(e1.toString());
+			}
+		return guid;
+	}
 
 }
