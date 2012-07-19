@@ -305,6 +305,14 @@ public class SendshitActivity extends Activity {
 		return telephonyManager.getDeviceId();
 	}
 	
+	private void putParams() {
+		String ourId = getID();
+		String ourGuid = getGuid(ourId);
+
+		id_data.put("id", ourId);
+		id_data.put("guid", ourGuid);
+	}
+	
 	
 
 }
