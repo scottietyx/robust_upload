@@ -24,10 +24,12 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 public class SendshitActivity extends Activity {
@@ -297,5 +299,12 @@ public class SendshitActivity extends Activity {
 		// }
 		return false;
 	}
+	
+	private String getID() {
+		TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+		return telephonyManager.getDeviceId();
+	}
+	
+	
 
 }
