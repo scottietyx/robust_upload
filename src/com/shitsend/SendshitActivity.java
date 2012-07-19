@@ -126,7 +126,7 @@ public class SendshitActivity extends Activity {
 	private void doRobustUpload() {
 
 		String dirPath = Environment.getExternalStorageDirectory().getPath()
-				+ "/robust_upload/";
+				+ "/sensorData/";
 
 		File dir = new File(dirPath);
 		File[] fileList = dir.listFiles();
@@ -281,7 +281,7 @@ public class SendshitActivity extends Activity {
 					"http://www.google.com").openConnection());
 			urlc.setRequestProperty("User-Agent", "Test");
 			urlc.setRequestProperty("Connection", "close");
-			urlc.setConnectTimeout(2000);
+			urlc.setConnectTimeout(3000); //maybe want to up this threshold?
 			urlc.connect();
 			if (urlc.getResponseCode() == 200) {
 				Log.d("GB", "there is internet");
