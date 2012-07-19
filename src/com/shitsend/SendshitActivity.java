@@ -143,6 +143,8 @@ public class SendshitActivity extends Activity {
 		File[] fileList = dir.listFiles();
 
 		for (File f : fileList) {
+			
+			
 			doUploadFile(f, 1);
 		}
 
@@ -179,15 +181,13 @@ public class SendshitActivity extends Activity {
 
 		while (file_scanner.hasNext()) {
 
-			if (!hasActiveInternetConnection()) {
-				// write code to pause here
+			if (!hasActiveInternetConnection()) { //break from loop if no connectivity
 				break;
-
 			}
 
 			String currentline = null;
 
-			for (int i = 0; i < 10; i++) {
+			for (int i = 0; i < 10; i++) { //send 10 lines
 				currentline += file_scanner.next();
 			}
 
