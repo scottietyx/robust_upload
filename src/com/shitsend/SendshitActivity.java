@@ -12,7 +12,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import org.apache.http.HttpResponse;
@@ -33,9 +35,13 @@ import android.os.StrictMode;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
+import edu.umass.cs.gcrs.gcrs.GCRS;
+import edu.umass.cs.gcrs.server.HTTPClient;
+
 public class SendshitActivity extends Activity {
 
-	// private Map<String, String> id_data = new HashMap<String, String>();
+	private Map<String, String> id_data = new HashMap<String, String>();
+	private HTTPClient gcrsClient = new HTTPClient();
 
 	/**
 	 * Called when the activity is first created.
@@ -51,6 +57,8 @@ public class SendshitActivity extends Activity {
 			.permitAll().build();
 			StrictMode.setThreadPolicy(policy);
 		}
+		
+		putParams();
 
 		new uploadTask().execute();
 
@@ -308,14 +316,14 @@ public class SendshitActivity extends Activity {
 	
 	private void putParams() {
 		String ourId = getID();
-		String ourGuid = getGuid(ourId);
+		String ourGuid = getGuid(ourId); //gets or creates GUID using phone IMEI
 
 		id_data.put("id", ourId);
 		id_data.put("guid", ourGuid);
 	}
 	
-	private String getGuid(String username) {
-		Log.d(LOG_TAG, "Grabbing GUID");
+	private String getGuid(String username) { 
+		Log.d("uploader", "Grabbing GUID");
 		String guid = null;
 
 		try {
