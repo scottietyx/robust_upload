@@ -152,8 +152,9 @@ public class SendshitActivity extends Activity {
 		String boundary = "*****";
 
 		/*
-		 * int bytesRead, bytesAvailable, bufferSize; byte[] buffer; int
-		 * maxBufferSize = 1 * 1024 * 1024;
+		 * int bytesRead, bytesAvailable, bufferSize; 
+		 * byte[] buffer; 
+		 * int maxBufferSize = 1 * 1024 * 1024;
 		 */
 
 		Scanner file_scanner = null;
@@ -211,7 +212,7 @@ public class SendshitActivity extends Activity {
 				dos = new DataOutputStream(conn.getOutputStream());
 
 				// write header
-				String key = "u";
+				String key = "u"; 
 				dos.writeBytes(twoHyphens + boundary + lineEnd);
 				dos.writeBytes("Content-Disposition: form-data; name=" + key
 						+ lineEnd);
@@ -247,22 +248,26 @@ public class SendshitActivity extends Activity {
 			}
 		}
 		
-		if(file_scanner.hasNext()) {
+		if(file_scanner.hasNext()) {  //if there is a next line in the file
 			Log.d("GB", "upload not finished");
 			
-			int pausetime=1000;
-			while (!hasActiveInternetConnection()){
+			int pausetime=1000; //pause for 1000 milli sec
+			while (!hasActiveInternetConnection()){ //detect internet connectivity
 				try {
-					Thread.sleep(pausetime); //pauses loop (millisecs)
+					Thread.sleep(pausetime); //pauses loop 
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				Log.d("GB", "trying to connect. pausing for: " + pausetime + " seconds");
-				pausetime*=2;
+				if (pausetime < 6000) {
+					pausetime*=2; //doubles pausetime if no internet connectivity
+				} else {
+					pausetime = 6000; //caps pause time at 1min (checks every minute)
+				}
 			}
 			
-			new getLineTask().execute();
+			new getLineTask().execute(); //gets line and resumes upload 
 		}
 
 		Log.d("MediaPlayer", "Done uploading everything");
