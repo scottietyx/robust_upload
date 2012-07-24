@@ -1,11 +1,14 @@
 package com.shitsend;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -35,9 +38,6 @@ import android.os.StrictMode;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import edu.umass.cs.gcrs.gcrs.GCRS;
-import edu.umass.cs.gcrs.server.HTTPClient;
-
 public class SendshitActivity extends Activity {
 
 	private Map<String, String> id_data = new HashMap<String, String>();
@@ -54,10 +54,10 @@ public class SendshitActivity extends Activity {
 
 		if (android.os.Build.VERSION.SDK_INT > 9) {
 			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-			.permitAll().build();
+					.permitAll().build();
 			StrictMode.setThreadPolicy(policy);
 		}
-		
+
 		putParams();
 
 		new uploadTask().execute();
@@ -68,7 +68,7 @@ public class SendshitActivity extends Activity {
 
 	private class getLineTask extends AsyncTask<Void, Void, Void> {
 
-		//int timestamp = 0;
+		// int timestamp = 0;
 
 		@Override
 		protected Void doInBackground(Void... params) {
@@ -81,7 +81,8 @@ public class SendshitActivity extends Activity {
 				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
 						2);
 				nameValuePairs.add(new BasicNameValuePair("sensor", "1"));
-				nameValuePairs.add(new BasicNameValuePair("id", "30B57BFBB820273207483858911A00377BD558A3"));
+				nameValuePairs.add(new BasicNameValuePair("id",
+						"30B57BFBB820273207483858911A00377BD558A3"));
 				httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
 				// Execute HTTP Post Request
@@ -143,8 +144,7 @@ public class SendshitActivity extends Activity {
 		File[] fileList = dir.listFiles();
 
 		for (File f : fileList) {
-			
-			
+
 			doUploadFile(f, 1);
 		}
 
@@ -156,18 +156,26 @@ public class SendshitActivity extends Activity {
 		DataOutputStream dos = null;
 		DataInputStream inStream = null;
 
-		String urlString = "http://dolan.bounceme.net/robust_upload.php"; // if i'm at work and dolan is home
-		// String urlString = "http://192.168.206.31/robust_upload.php"; // both at work
-		// String urlString = "http://192.168.1.45/robust_upload.php"; //both at home
+		String urlString = "http://dolan.bounceme.net/robust_upload.php"; // if
+																			// i'm
+																			// at
+																			// work
+																			// and
+																			// dolan
+																			// is
+																			// home
+		// String urlString = "http://192.168.206.31/robust_upload.php"; // both
+		// at work
+		// String urlString = "http://192.168.1.45/robust_upload.php"; //both at
+		// home
 
 		String lineEnd = "\r\n";
 		String twoHyphens = "--";
 		String boundary = "*****";
 
 		/*
-		 * int bytesRead, bytesAvailable, bufferSize; 
-		 * byte[] buffer; 
-		 * int maxBufferSize = 1 * 1024 * 1024;
+		 * int bytesRead, bytesAvailable, bufferSize; byte[] buffer; int
+		 * maxBufferSize = 1 * 1024 * 1024;
 		 */
 
 		Scanner file_scanner = null;
@@ -181,13 +189,14 @@ public class SendshitActivity extends Activity {
 
 		while (file_scanner.hasNext()) {
 
-			if (!hasActiveInternetConnection()) { //break from loop if no connectivity
+			if (!hasActiveInternetConnection()) { // break from loop if no
+													// connectivity
 				break;
 			}
 
 			String currentline = null;
 
-			for (int i = 0; i < 10; i++) { //send 10 lines
+			for (int i = 0; i < 10; i++) { // send 10 lines
 				currentline += file_scanner.next();
 			}
 
@@ -223,7 +232,7 @@ public class SendshitActivity extends Activity {
 				dos = new DataOutputStream(conn.getOutputStream());
 
 				// write header
-				String key = "u"; 
+				String key = "u";
 				dos.writeBytes(twoHyphens + boundary + lineEnd);
 				dos.writeBytes("Content-Disposition: form-data; name=" + key
 						+ lineEnd);
@@ -258,27 +267,31 @@ public class SendshitActivity extends Activity {
 				Log.d("MediaPlayer", "error: " + ioex.getMessage(), ioex);
 			}
 		}
-		
-		if(file_scanner.hasNext()) {  //if there is a next line in the file
+
+		if (file_scanner.hasNext()) { // if there is a next line in the file
 			Log.d("GB", "upload not finished");
-			
-			int pausetime=1000; //pause for 1000 milli sec
-			while (!hasActiveInternetConnection()){ //detect internet connectivity
+
+			int pausetime = 1000; // pause for 1000 milli sec
+			while (!hasActiveInternetConnection()) { // detect internet
+														// connectivity
 				try {
-					Thread.sleep(pausetime); //pauses loop 
+					Thread.sleep(pausetime); // pauses loop
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				Log.d("GB", "trying to connect. pausing for: " + pausetime + " seconds");
+				Log.d("GB", "trying to connect. pausing for: " + pausetime
+						+ " seconds");
 				if (pausetime < 6000) {
-					pausetime*=2; //doubles pausetime if no internet connectivity
+					pausetime *= 2; // doubles pausetime if no internet
+									// connectivity
 				} else {
-					pausetime = 6000; //caps pause time at 1min (checks every minute)
+					pausetime = 6000; // caps pause time at 1min (checks every
+										// minute)
 				}
 			}
-			
-			new getLineTask().execute(); //gets line and resumes upload 
+
+			new getLineTask().execute(); // gets line and resumes upload
 		}
 
 		Log.d("MediaPlayer", "Done uploading everything");
@@ -292,7 +305,7 @@ public class SendshitActivity extends Activity {
 					"http://www.google.com").openConnection());
 			urlc.setRequestProperty("User-Agent", "Test");
 			urlc.setRequestProperty("Connection", "close");
-			urlc.setConnectTimeout(3000); //maybe want to up this threshold?
+			urlc.setConnectTimeout(3000); // maybe want to up this threshold?
 			urlc.connect();
 			if (urlc.getResponseCode() == 200) {
 				Log.d("GB", "there is internet");
@@ -308,29 +321,30 @@ public class SendshitActivity extends Activity {
 		// }
 		return false;
 	}
-	
+
 	private String getID() {
 		TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 		return telephonyManager.getDeviceId();
 	}
-	
+
 	private void putParams() {
 		String ourId = getID();
-		String ourGuid = getGuid(ourId); //gets or creates GUID using phone IMEI
+		String ourGuid = getGuid(ourId); // gets or creates GUID using phone
+											// IMEI
 
 		id_data.put("id", ourId);
 		id_data.put("guid", ourGuid);
 	}
-	
-	private String getGuid(String username) { 
+
+	private String getGuid(String username) {
 		Log.d("uploader", "Grabbing GUID");
 		String guid = null;
 
 		try {
-			guid =  gcrsClient.lookupUserGuid(username);
+			guid = gcrsClient.lookupUserGuid(username);
 		} catch (RuntimeException e) {
 			try {
-				guid =  gcrsClient.registerNewUser(username);
+				guid = gcrsClient.registerNewUser(username);
 			} catch (NoSuchAlgorithmException e1) {
 				GCRS.getLogger().severe(e1.toString());
 			} catch (IOException e1) {
@@ -341,7 +355,7 @@ public class SendshitActivity extends Activity {
 		}
 		if (guid.contains("+BADUSER+"))
 			try {
-				guid =  gcrsClient.registerNewUser(username);
+				guid = gcrsClient.registerNewUser(username);
 			} catch (NoSuchAlgorithmException e1) {
 				GCRS.getLogger().severe(e1.toString());
 			} catch (IOException e1) {
@@ -350,4 +364,30 @@ public class SendshitActivity extends Activity {
 		return guid;
 	}
 
+	private void generateSqlFromCsv(File file) {
+		InputStream in = new FileInputStream(file);
+		try {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+			
+			String line;
+			
+			String timestamp, x, y, z, id, guid, ip;
+	        while ((line = reader.readLine()) != null) {
+	             String[] RowData = line.split(",");
+	             
+	             timestamp = RowData[0];
+	             x = RowData[1];
+	             y = RowData[2];
+	             z = RowData[3];
+	            // do something with "data" and "value"
+	        }
+
+
+		} finally {
+			if (in != null) {
+				in.close();
+			}
+		}
+
+	}
 }
